@@ -11,10 +11,19 @@ namespace SupermercadoVirtual.Controllers
         public IActionResult Index()
         {
             List<Elemento> carrito = SesionHelper.GetJsonToObjeto<List<Elemento>>(HttpContext.Session, "carrito");
-            //Le pasamos la lista de elementos
-            ViewBag.carrito = carrito;
-            //Le pasamos el total que lo obtenemos desde controlador (también podría ser obtenido en vista)
-            ViewBag.total = carrito.Sum(elem => elem.producto.precio * elem.cantidad);
+            if(carrito != null && carrito.Count > 0)
+            {
+                //Le pasamos la lista de elementos
+                ViewBag.carrito = carrito;
+                //Le pasamos el total que lo obtenemos desde controlador (también podría ser obtenido en vista)
+                ViewBag.total = carrito.Sum(elem => elem.producto.precio * elem.cantidad);
+            }
+            else
+            {
+                ViewBag.carrito = new List<Elemento>();
+                ViewBag.total = 0;
+            }
+            
             return View();
         }
 
@@ -61,6 +70,15 @@ namespace SupermercadoVirtual.Controllers
                 SesionHelper.SetObjetoToJson(HttpContext.Session, "carrito", carrito);
             }
             return RedirectToAction("Index");
+        }
+
+        public IActionResult Vaciar()
+        {
+            List<Elemento> carrito = SesionHelper.GetJsonToObjeto<List<Elemento>>(HttpContext.Session, "carrito");
+            ViewBag.total = carrito.Sum(elem => elem.producto.precio * elem.cantidad);
+            carrito = new List<Elemento>();
+            SesionHelper.SetObjetoToJson(HttpContext.Session, "carrito", carrito);
+            return View("Listo");
         }
     }
 }

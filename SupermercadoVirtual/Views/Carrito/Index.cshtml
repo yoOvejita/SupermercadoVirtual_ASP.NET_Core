@@ -1,0 +1,38 @@
+﻿@*
+    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+*@
+@{
+}
+<h3>Tu carrito</h3>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th sscope="col">Nombre</th>
+            <th sscope="col">Imagen</th>
+            <th sscope="col">Precio</th>
+            <th sscope="col">Cantidad</th>
+            <th sscope="col">Acción</th>
+            <th sscope="col">Subtotal</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach(var elem in ViewBag.carrito)
+        {
+            <tr>
+                <td>@elem.producto.nombre</td>
+                <td><img src="~/imagenes/@elem.producto.imagen" width="100"/></td>
+                <td>@elem.producto.precio</td>
+                <td>@elem.cantidad</td>
+                <td><a asp-controller="Carrito" asp-action="Eliminar" asp-route-id="@elem.producto.id">Eliminar uno</a></td>
+                <td>@(elem.producto.precio * elem.cantidad)</td>
+            </tr>
+        }
+        <tr>
+            <td colspan="5" align="right">Total:</td>
+            <td>@ViewBag.total</td>
+        </tr>
+    </tbody>
+</table>
+<a asp-controller="principal" asp-action="index">Volver atrás</a>
+<a asp-controller="Carrito" asp-action="Vaciar">Finalizar compra</a>
