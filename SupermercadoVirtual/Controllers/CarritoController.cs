@@ -64,9 +64,11 @@ namespace SupermercadoVirtual.Controllers
         {
             List<Elemento> carrito = SesionHelper.GetJsonToObjeto<List<Elemento>>(HttpContext.Session, "carrito");
             int indice = getIndice(id);
-            if(indice != -1)
+            if(indice != -1)//existe
             {
-                carrito.RemoveAt(indice);
+                carrito[indice].cantidad--;
+                if (carrito[indice].cantidad <= 0)
+                    carrito.RemoveAt(indice);
                 SesionHelper.SetObjetoToJson(HttpContext.Session, "carrito", carrito);
             }
             return RedirectToAction("Index");
